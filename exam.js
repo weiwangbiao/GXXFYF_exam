@@ -1,4 +1,4 @@
-if (window.location.href != 'http://exam.gxpf.cn/exam-ing-new.html?id=147&action=start' && window.location.href != 'http://exam.gxpf.cn/exercise.html') {
+if (window.location.host != 'exam.gxpf.cn') {
 	alert('Enter exam/exercise first, and then click me.');
 }
 else {
