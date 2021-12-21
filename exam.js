@@ -15,7 +15,8 @@ else {
 function doit(){
 	if(now_id < 51) {
 		var rndtime = Math.round(Math.random()*60000);
-		console.log('answering no.'+now_id+' ...and wait for '+rndtime+' seconds...');
+		sltime = sltime+rndtime
+		console.log('answering no.'+now_id+' ...and wait for '+sltime/1000+' seconds...');
 		$("li[data-type='0'").click();
 		$("#btnConfirm").click();
 		if ($("#btnNext").length > 0){
