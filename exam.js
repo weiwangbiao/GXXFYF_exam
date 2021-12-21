@@ -14,14 +14,14 @@ else {
 }
 function doit(){
 	if(now_id < 51) {
-		console.log('answering no.'+now_id+' ...');
+		var rndtime = Math.round(Math.random()*60000);
+		console.log('answering no.'+now_id+' ...and wait for '+rndtime+' seconds...');
 		$("li[data-type='0'").click();
 		$("#btnConfirm").click();
 		if ($("#btnNext").length > 0){
 			$("#btnNext").click();
 			}
-		
-		setTimeout("doit()", sltime+Math.round(Math.random()*60*1000));
+		setTimeout("doit()", sltime+rndtime);
 		now_id++;
 	}	
 		
