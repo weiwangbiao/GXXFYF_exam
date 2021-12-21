@@ -2,8 +2,9 @@ if (window.location.host != 'exam.gxpf.cn') {
 	alert('Enter exam/exercise first, and then click me.');
 }
 else {
-	var sltime = prompt("Please input sleep time(s): ","20");
-	sltime = parseInt(sltime*1000);
+	var input_time = prompt("Please input sleep time(s): ","20");
+	input_time = parseInt(input_time*1000);
+	var input_rndtime = prompt("Please input random time(s): ","20");
 	var now_id = 1;	
 	doit();
 	/*
@@ -14,9 +15,9 @@ else {
 }
 function doit(){
 	if(now_id < 51) {
-		var rndtime = Math.round(Math.random()*60000);
-		sltime = sltime+rndtime
-		console.log('answering no.'+now_id+' ...and wait for '+sltime/1000+' seconds...');
+		var rndtime = Math.round(Math.random()*input_rndtime*1000);
+		sltime = input_time+rndtime
+		console.log(new Date().toLocaleTimeString()+': answering no.'+now_id+' ...and wait for '+sltime/1000+' seconds...');
 		$("li[data-type='0'").click();
 		$("#btnConfirm").click();
 		if ($("#btnNext").length > 0){
