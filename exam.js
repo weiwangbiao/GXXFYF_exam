@@ -18,8 +18,10 @@ function doit(){
 		var rndtime = Math.round(Math.random()*input_rndtime*1000);
 		sltime = input_time+rndtime
 		console.log(new Date().toLocaleTimeString()+': answering no.'+now_id+' ...and wait for '+sltime/1000+' seconds...');
-		$("li[data-type='0'").click();
-		$("#btnConfirm").click();
+		
+		##$("li[data-type='0'").click();
+		document.getElementById("btnConfirm").click();
+		##$("#btnConfirm").click();
 		if ($("#btnNext").length > 0){
 			$("#btnNext").click();
 			}
