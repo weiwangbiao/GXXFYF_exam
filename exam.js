@@ -21,7 +21,7 @@ function doit(){
 			$("#btnNext").click();
 			}
 		
-		setTimeout("doit()", sltime);
+		setTimeout("doit()", sltime+Math.round(Math.random()*60*1000));
 		now_id++;
 	}	
 		
