@@ -1,3 +1,5 @@
+// @require    http://code.jquery.com/jquery-1.11.0.min.js
+
 if (window.location.host != 'exam.gxpf.cn') {
 	alert('Enter exam/exercise first, and then click me.');
 }
