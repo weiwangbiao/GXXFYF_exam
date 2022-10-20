@@ -17,5 +17,5 @@ for subjectId in range(10830, 17002):
             r.update(answer_r)
             print(r)
             with open(str(subjectId) + '.json', 'w+') as f:
-                f.write(str(r))
-                # json.dump(r, f)
+                # f.write(str(r)) # eroor：UnicodeEncodeError: 'gbk' codec can't encode character '\xab' in position 198: illegal multibyte sequence
+                json.dump(r, f) # write in Unicode，like：{"itemIds": ["63117", "63118"], "description": "", "itemNums": 2, "items": ["\u6b63\u786e", "\u9519\u8bef"], "subjectType": 3, "subjectId": 16213, "subjectName": "\u56e0\u653f\u5e9c\u4f9d\u6cd5\u7edf\u4e00\u5f81\u6536\u519c\u6751\u96c6\u4f53\u571f\u5730\u800c\u5931\u5730\uff0c\u88ab\u5f81\u5730\u519c\u6c11\u4e0d\u4eab\u53d7\u517b\u8001\u4fdd\u9669\u8865\u8d34\u3002(  )", "id": "63118"}
