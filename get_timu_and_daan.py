@@ -3,7 +3,7 @@ import json
 import time
 
 # search from id 10000 to id 20000
-for subjectId in range(10000, 20000):
+for subjectId in range(10830, 17002):
     # question_type:1 single, 2 multis, 3 bools
     for question_type in range(1, 4):
         # url = http://examapi.gxpf.cn/cdndata/question_bank/question_type_1/13654.json
