@@ -1,0 +1,22 @@
+ { 
+    "manifest_version": 2,
+    "name": "2022广西普法考试小助手",
+    "version": "1.2022.0",
+    "description": "广西普法考试小助手，使用帮助：在练习和考试界面，找到间隔和随机答题的地方，输入答题间隔和随机事件，单机答题按钮开始自动答题，答题后停止。",
+    "icons":
+    {
+    "16": "gxpflogo.png",
+    "48": "gxpflogo.png",
+    "128": "gxpflogo.png"
+    },
+ 
+ 
+ "content_scripts": [
+	{	
+		"matches": ["http://exam.gxpf.cn/exercise.html*","http://exam.gxpf.cn/exam*"],
+		"js": ["/js/autoAnswer.js"],
+		"run_at": "document_start"
+	}
+ ],
+"web_accessible_resources": ["js/inject.js"]
+ }

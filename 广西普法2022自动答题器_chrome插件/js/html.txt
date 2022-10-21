@@ -1,0 +1,613 @@
+<body class="scrollbar" style="height: 769px; width: 643px;">
+		<!-- header -->
+		<div class="header" id="headerbar"><div class="container-fluid">
+            <div class="d-flex justify-start">
+                <div class="d-block">
+                    <a class="logo" href="index.html">
+                        <img alt="" src="content/images/icon-header-logo@40px.png">
+                        广西普法云平台
+                    </a>
+                </div>
+                <div class="d-flex-item plr-md">
+                    <form class="search-box d-none" name="" action="">
+                        <span class="cancel" title="取消"></span>
+                        <input type="text" class="form-control" name="" value="" placeholder="搜索...">
+                        <button type="submit" title="搜索"></button>
+                    </form>
+                </div>
+                <div class="d-block">
+                    <div class="tools">
+                        <!-- <a class="link search" href="javascript:;"><span class="d-none">搜索</span></a> -->
+                        <a class="link notice" href="notice.html"><span class="d-none">通知</span></a>
+                        <a class="link user" href="user.html"><span class="d-none">用户</span></a>
+                        <a class="link logout" href="javascript:logout()"><span class="d-none">退出</span></a>
+                    </div>
+                </div>
+            </div>
+</div>
+<script language="javascript">
+function logout(){
+  $.removeCookie('cookie_a_tokenId',{ path: '/'});
+  $.removeCookie('cookie_a_code',{ path: '/'});
+  $.removeCookie('cookie_a_st',{ path: '/'});
+  $.removeCookie('cookie_a_userId',{ path: '/'});
+  location.href='login.html'
+}
+</script></div>
+		<!-- sidebar 引入左侧菜单 -->
+		<div class="sidebar" id="siderBar"> 
+        <div class="d-flex-column height-all">
+            <div class="user">
+                <div class="avatar default">
+                    <img id="siderBarUserIcon" alt="" src="content/images/defaultusericon.png" onerror="this.src='content/images/defaultusericon.png'" style="border:4px solid #41444a;">
+                </div>
+                <h4 class="c-white ptb-sm" id="siderBarUserName">吴兰芳</h4>  间隔：<input type="text" id="sleep_time" style="width:30px;" value="1"> +随机<input type="text" id="rnd_time" style="width:30px;" value="1">秒。 <input type="button" value="答题！" id="answerme">  
+                <h6>
+                    <span class="tags max radius-xs bg-primary">
+                        <u class="c-white" id="userIntegral">73分</u>
+                    </span>
+                </h6>
+            </div>
+            <div class="d-flex-item scrollbar">
+                <div class="menus">
+                    <a class="link" href="index.html">
+                        <img alt="" src="content/images/icon-menus-home@18px.png">
+                        <span class="d-flex-item pl-sm">首页</span>
+                    </a>
+                    <a class="link" href="material.html?time=1662430706000">
+                        <img alt="" src="content/images/icon-menus-books@18px.png">
+                        <span class="d-flex-item pl-sm">学法资料</span>
+                    </a>
+                    <a class="link" href="exercise.html">
+                        <img alt="" src="content/images/icon-menus-editor@18px.png">
+                        <span class="d-flex-item pl-sm">我的练习</span>
+                    </a>
+                    <a id="myExam" class="link" href="exam-new.html?time=1665555813972">
+                        <img alt="" src="content/images/icon-menus-grade@18px.png">
+                        <span class="d-flex-item pl-sm">我的考试</span>
+                    </a>
+                    <a class="link" href="grade.html">
+                        <img alt="" src="content/images/icon-menus-grade@18px.png">
+                        <span class="d-flex-item pl-sm">我的成绩</span>
+                    </a>
+					<!-- 为建设, 暂时注释 -->
+                    <!-- <a class="link" href="integral.html" id='scoreChg'>
+                        <img alt="" src="content/images/icon-menus-exchange@18px.png" />
+                        <span class="d-flex-item pl-sm">积分兑换</span>
+                    </a> -->
+                    <a class="link" href="notice.html">
+                        <img alt="" src="content/images/icon-menus-mail@18px.png">
+                        <span class="d-flex-item pl-sm">通知公告</span>
+                    </a>
+					<a class="link" href="./faq/faq.html" target="_blank">
+						<!-- 微调像素位置, 直接使用行间式了 -->
+						<img alt="" src="content/images/faq.svg" width="21" style="margin-left: -1px;">
+					    <span style="color: #0afff6; margin-left: -3px !important; " class="d-flex-item pl-sm">问答中心</span>
+					</a>
+                </div>
+                <br>
+            </div>
+        </div>
+<script language="javascript">
+$(function() {
+	document.getElementById("myExam").setAttribute("href","exam-new.html?time=" + new Date().getTime());
+	$("#siderBarUserIcon").attr("src",api.getUserIconImgUrl+"?userId="+$.cookie("cookie_a_userId"))
+	$('.menus .link').each(function() {
+		if (location.href.indexOf($(this).attr('href'))!=-1){
+			$(this).addClass('active');
+		}
+	});
+
+	$("#scoreChg").click(function(){
+		alert('正在建设中，即将上线')
+		return false
+	})
+    
+    var userId =  $.cookie("cookie_a_userId");
+    var keyName = userId+'_Info';
+    var userInfo = localStorage.getItem(keyName); // 读取字符串数据
+    var score = 0;
+	var paperKey = 'localDataFirstPaper_' + $.cookie("cookie_a_userId") + "_143";
+	localStorage.removeItem(paperKey);
+	if (userInfo!=null){	
+        userInfo= JSON.parse( userInfo); 
+        $("#siderBarUserName").html(userInfo.username)
+        if ( undefined != userInfo.integral && null != userInfo.integral)
+            score = userInfo.integral;
+		$("#userIntegral").html(score+'分')
+		// notFirtSubmit(); //用户答完全部试题未交卷，交卷未成功，系统自动交卷
+    }else{
+        callRemoteMethod(api.redisUserUrl, {}, userCallBack); //server    
+        //callRemoteMethod('./cdndata/redis.json', {}, userCallBack)
+        function userCallBack( redisUser ){
+            if ( redisUser.status == 200 ){
+                $("#siderBarUserName").html(redisUser.result[0].username);
+                if ( undefined != redisUser.result[0].integral && null != redisUser.result[0].integral)
+                    score = redisUser.result[0].integral;
+                $("#userIntegral").html(score+'分');
+                //设置到localStorage中的，记录用户的信息 key=userId_info
+                localStorage.setItem(redisUser.result[0].id+'_Info', JSON.stringify(redisUser.result[0]));
+				// notFirtSubmit();//用户答完全部试题未交卷，交卷未成功，系统自动交卷
+            }
+        }
+	}
+})
+
+/*用户答完全部试题未交卷，交卷未成功，系统自动交卷*/
+function notFirtSubmit(){
+	var storage=window.localStorage;
+	for(var i=0;i<storage.length;i++){
+	   var key=storage.key(i);
+	   var arr = key.split('_')
+	   if (arr[0]=='localDataFirstPaper' && arr.length==3 && arr[1]==$.cookie("cookie_a_userId")){
+			var examInfoId = arr[2]
+		    var getLocalData = localStorage['localDataFirstPaper_'+$.cookie("cookie_a_userId")+'_'+examInfoId];  
+			var subres=localStorage['localDataFirstPaper_'+$.cookie("cookie_a_userId")+'_'+examInfoId+'_subres']
+		   	console.log($.cookie("cookie_a_userId") +'   '+subres)
+			if (subres ==null || typeof(subres)=="undefined"){
+				var keyName = $.cookie("cookie_a_userId")+'_Info';
+				var userInfo = localStorage.getItem(keyName);
+				if (typeof(userInfo.papersUserSubmit)!='undefined' && typeof(userInfo.papersUserSubmit)!='string' &&  userInfo.papersUserSubmit.length>0){
+					localStorage['localDataFirstPaper_'+$.cookie("cookie_a_userId")+'_'+examInfoId+'_subres']=true
+					subres = true
+					console.log('already submit')
+					return
+				}
+			}
+			if (getLocalData!=null && (subres ==null || typeof(subres)=="undefined" || subres==false )){
+				 var res = JSON.parse(getLocalData);
+				 ARR_PAPER_BOOLS=res.result[0].examPaperDetail.listBool
+				 ARR_PAPER_MULTIS=res.result[0].examPaperDetail.listMultis
+				 ARR_PAPER_SINGLES=res.result[0].examPaperDetail.listSingles
+				 ARR_ALL = ARR_PAPER_SINGLES.concat(ARR_PAPER_MULTIS).concat(ARR_PAPER_BOOLS)//试卷全部试题信息
+				 var jsonVal = JSON.parse($.cookie("firstSubmit"))[$.cookie("cookie_a_userId")+'_'+examInfoId];
+				 var singles='',multis='',bools='';
+				 for(var key in jsonVal.singleMap){
+					singles+=key+':'+jsonVal.singleMap[key]+',';
+				 }
+				 for(var key in jsonVal.multiMap){
+					multis += key+':'+jsonVal.multiMap[key]+',';
+				 }
+				 for(var key in jsonVal.boolMap){
+					bools += key+':'+jsonVal.boolMap[key]+','
+				 }
+				 if (singles!=''){
+					singles=singles.substring(0,singles.length-1)
+				 }
+				 if (multis!=''){
+					multis=multis.substring(0,multis.length-1)
+				 }
+				 if (bools!=''){
+					bools=bools.substring(0,bools.length-1)
+				 }
+				 
+				 var answerLen = singles.split(',').length+multis.split(',').length+bools.split(',').length;
+				 if (answerLen == ARR_ALL.length){ //用户答完全部试题	
+					 delete jsonVal['singleMap']
+					 delete jsonVal['multiMap']
+					 delete jsonVal['boolMap']
+					 jsonVal.singles=singles
+					 jsonVal.bools=bools
+					 jsonVal.multis=multis
+					 jsonVal.userIsFinish=1
+					 callRemoteMethod(api.getUserSubmitExamPaperUrl,jsonVal,submitCallBack);
+					 function submitCallBack(res){
+						localStorage['localDataFirstPaper_'+$.cookie("cookie_a_userId")+'_'+examInfoId+'_subres']=true
+						console.log('自动交卷成功')
+					 }
+				 }
+			}	
+	   }
+	}
+}
+</script>
+</div>
+		<!-- contents -->
+		<div class="contents">
+			<div class="container-fluid">
+				<div class="return-back">
+					<a href="javascript:;" onclick="goBack()">
+						<img alt="" src="content/images/icon-arrow-left-white@20px.png">
+					</a>
+				</div>
+				<br>
+				<div class="d-flex">
+					<div class="d-block mr-md width-320">
+						<div class="d-block bg-white p-md mb-md radius-sm">
+							<h4 class="align-center">答题卡</h4>
+							<hr>
+							<div class="d-block" id="datikaDiv"><span id="dtk_15236" class="topic-number blue ing noanswer">1</span><span id="dtk_15344" class="topic-number blue noanswer">2</span><span id="dtk_14035" class="topic-number blue noanswer">3</span><span id="dtk_15234" class="topic-number blue noanswer">4</span><span id="dtk_13906" class="topic-number blue noanswer">5</span><span id="dtk_14032" class="topic-number blue noanswer">6</span><span id="dtk_14833" class="topic-number blue noanswer">7</span><span id="dtk_15033" class="topic-number blue noanswer">8</span><span id="dtk_13949" class="topic-number blue noanswer">9</span><span id="dtk_15281" class="topic-number blue noanswer">10</span><span id="dtk_15061" class="topic-number blue noanswer">11</span><span id="dtk_15279" class="topic-number blue noanswer">12</span><span id="dtk_14103" class="topic-number blue noanswer">13</span><span id="dtk_14492" class="topic-number blue noanswer">14</span><span id="dtk_13850" class="topic-number blue noanswer">15</span><span id="dtk_14733" class="topic-number blue noanswer">16</span><span id="dtk_14961" class="topic-number blue noanswer">17</span><span id="dtk_14482" class="topic-number blue noanswer">18</span><span id="dtk_13939" class="topic-number blue noanswer">19</span><span id="dtk_13987" class="topic-number blue noanswer">20</span><span id="dtk_13837" class="topic-number blue noanswer">21</span><span id="dtk_14554" class="topic-number blue noanswer">22</span><span id="dtk_14963" class="topic-number blue noanswer">23</span><span id="dtk_15123" class="topic-number blue noanswer">24</span><span id="dtk_15189" class="topic-number blue noanswer">25</span><span id="dtk_14791" class="topic-number blue noanswer">26</span><span id="dtk_13982" class="topic-number blue noanswer">27</span><span id="dtk_14619" class="topic-number blue noanswer">28</span><span id="dtk_13889" class="topic-number blue noanswer">29</span><span id="dtk_14299" class="topic-number blue noanswer">30</span><span id="dtk_14815" class="topic-number blue noanswer">31</span><span id="dtk_14074" class="topic-number blue noanswer">32</span><span id="dtk_13964" class="topic-number blue noanswer">33</span><span id="dtk_14055" class="topic-number blue noanswer">34</span><span id="dtk_14082" class="topic-number blue noanswer">35</span><span id="dtk_14488" class="topic-number blue noanswer">36</span><span id="dtk_14037" class="topic-number blue noanswer">37</span><span id="dtk_14066" class="topic-number blue noanswer">38</span><span id="dtk_13824" class="topic-number blue noanswer">39</span><span id="dtk_14670" class="topic-number blue noanswer">40</span><span id="dtk_13934" class="topic-number blue noanswer">41</span><span id="dtk_15252" class="topic-number blue noanswer">42</span><span id="dtk_15401" class="topic-number blue noanswer">43</span><span id="dtk_14541" class="topic-number blue noanswer">44</span><span id="dtk_14008" class="topic-number blue noanswer">45</span><span id="dtk_14914" class="topic-number blue noanswer">46</span><span id="dtk_14396" class="topic-number blue noanswer">47</span><span id="dtk_14604" class="topic-number blue noanswer">48</span><span id="dtk_14831" class="topic-number blue noanswer">49</span><span id="dtk_14606" class="topic-number blue noanswer">50</span><span id="dtk_15651" class="topic-number blue noanswer">51</span><span id="dtk_15699" class="topic-number blue noanswer">52</span><span id="dtk_15899" class="topic-number blue noanswer">53</span><span id="dtk_15558" class="topic-number blue noanswer">54</span><span id="dtk_15758" class="topic-number blue noanswer">55</span><span id="dtk_15427" class="topic-number blue noanswer">56</span><span id="dtk_15446" class="topic-number blue noanswer">57</span><span id="dtk_16035" class="topic-number blue noanswer">58</span><span id="dtk_15753" class="topic-number blue noanswer">59</span><span id="dtk_16057" class="topic-number blue noanswer">60</span><span id="dtk_15752" class="topic-number blue noanswer">61</span><span id="dtk_15789" class="topic-number blue noanswer">62</span><span id="dtk_15795" class="topic-number blue noanswer">63</span><span id="dtk_15602" class="topic-number blue noanswer">64</span><span id="dtk_15416" class="topic-number blue noanswer">65</span><span id="dtk_15938" class="topic-number blue noanswer">66</span><span id="dtk_15801" class="topic-number blue noanswer">67</span><span id="dtk_15488" class="topic-number blue noanswer">68</span><span id="dtk_16063" class="topic-number blue noanswer">69</span><span id="dtk_15512" class="topic-number blue noanswer">70</span><span id="dtk_16318" class="topic-number blue noanswer">71</span><span id="dtk_16274" class="topic-number blue noanswer">72</span><span id="dtk_16657" class="topic-number blue noanswer">73</span><span id="dtk_16207" class="topic-number blue noanswer">74</span><span id="dtk_16163" class="topic-number blue noanswer">75</span><span id="dtk_16973" class="topic-number blue noanswer">76</span><span id="dtk_16691" class="topic-number blue noanswer">77</span><span id="dtk_16774" class="topic-number blue noanswer">78</span><span id="dtk_16594" class="topic-number blue noanswer">79</span><span id="dtk_16757" class="topic-number blue noanswer">80</span><span id="dtk_16355" class="topic-number blue noanswer">81</span><span id="dtk_16541" class="topic-number blue noanswer">82</span><span id="dtk_16487" class="topic-number blue noanswer">83</span><span id="dtk_16736" class="topic-number blue noanswer">84</span><span id="dtk_16568" class="topic-number blue noanswer">85</span><span id="dtk_16313" class="topic-number blue noanswer">86</span><span id="dtk_16891" class="topic-number blue noanswer">87</span><span id="dtk_16171" class="topic-number blue noanswer">88</span><span id="dtk_16223" class="topic-number blue noanswer">89</span><span id="dtk_16651" class="topic-number blue noanswer">90</span><span id="dtk_16907" class="topic-number blue noanswer">91</span><span id="dtk_16679" class="topic-number blue noanswer">92</span><span id="dtk_16201" class="topic-number blue noanswer">93</span><span id="dtk_16432" class="topic-number blue noanswer">94</span><span id="dtk_16220" class="topic-number blue noanswer">95</span><span id="dtk_16858" class="topic-number blue noanswer">96</span><span id="dtk_16515" class="topic-number blue noanswer">97</span><span id="dtk_16638" class="topic-number blue noanswer">98</span><span id="dtk_16530" class="topic-number blue noanswer">99</span><span id="dtk_16720" class="topic-number blue noanswer">100</span></div>
+							<div class="d-block p-sm radius-xs" style="background:#eee;">
+								<div class="d-flex justify-center">
+									<span class="d-flex justify-center plr-xs"><img class="mr-ns" alt="" src="content/images/img-exam-03.png">已答题</span>
+									<span class="d-flex justify-center plr-xs"><img class="mr-ns" alt="" src="content/images/img-exam-04.png">答题中</span>
+									<span class="d-flex justify-center plr-xs"><img class="mr-ns" alt="" src="content/images/img-exam-05.png">未答</span>
+								</div>
+							</div>
+						</div>
+						<div data-card="exam-img-examing" class="d-block mb-md radius-sm">
+							<div class="d-block p-xl c-white align-center">
+								<h2>已答题</h2>
+								<div class="exam-ing-charts">
+									<div class="exam-charts">
+										<h1 id="alreadySubjects">0/<span class="size-22">100</span></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex-item">
+						<div class="d-flex justify-start bg-white p-xs radius-sm">
+							<img alt="" src="content/images/icon-tags-03.png">
+							<h4 class="d-flex-item pl-md" id="examPaperName">02:52:23</h4>
+							<a data-toggle="right-box" class="d-block line-h-0" href="javascript:;">
+								<img alt="" src="content/images/icon-toggle-rightbox@24px.png">
+							</a>
+						</div>
+						<br>
+						<div class="tabs-exercise-wrapper">
+							<div class="d-block bg-white p-lg radius-sm">
+								<div class="d-flex">
+									<h5 class="d-flex-item pr-md">
+										<span class="size-16 line-h-30" id="subjectName">1、景区门票价格提高的，应当提前   个月向社会公布调整后的价格。</span>
+										<input type="hidden" id="nowSubjectId" value="15236">
+										<input type="hidden" id="nowSubjectType" value="1">
+									</h5>
+									<span class="tags max blue" style="height:16px;" id="subjectType">单选题</span>
+								</div>
+								<br>
+								<div class="d-block">
+									<ul data-list="answer-listview-random" data-type="0" class="exercise-answer-listview" id="subjectItems"><li class="answer-items mydefitems" itemid="59329" data-type="0"><span class="checked">a</span><p class="m-0">十二</p></li><li class="answer-items mydefitems" itemid="59328" data-type="0"><span class="checked">b</span><p class="m-0">六</p></li><li class="answer-items mydefitems primary" itemid="59326" data-type="0"><span class="checked">c</span><p class="m-0">一</p></li><li class="answer-items mydefitems" itemid="59327" data-type="0"><span class="checked">d</span><p class="m-0">三</p></li></ul>
+								</div>
+								<div data-show="exercise-answer-tipsbox" class="d-inline mtb-xxl">
+									<span class="d-flex justify-start">
+										<img alt="" src="content/images/icon-tips-gray@32px.png">
+										<a class="d-block size-14" href="javascript:;">查看提醒</a>
+									</span>
+								</div>
+								<div class="exercise-answer-tipsbox mtb-xxl d-none">
+									<h3 class="align-center">提醒</h3>
+									<hr>
+									<p id="reminderInfo"></p>
+									<h6 class="align-center">
+										<a data-hide="exercise-answer-tipsbox" href="javascript:;">
+											<span class="size-14 c-error">关闭</span>
+										</a>
+									</h6>
+								</div>
+							</div>
+							<br>
+							<div class="d-block bg-white p-lg radius-sm">
+								<div data-btn-group="btn-group" class="d-inline">
+									<button type="button" class="btn btn-success" id="btnConfirm">确定</button>
+									<button type="button" class="btn btn-default" id="btnPrevious">上一题</button>
+								</div>
+								<!-- <button data-end="exercise-ending" type="button" class="btn btn-danger" id="btnPause">暂停考试</button> -->
+								<button type="button" class="btn btn-danger float-right" id="btnHandPaper">交卷</button>
+							</div>
+						</div>
+					</div>
+					<div data-box="right-box" class="d-block ml-md width-340">
+						<div class="d-block bg-white p-md mb-md radius-sm">
+							<h4 class="align-center">准考证</h4>
+							<hr>
+							<p class="align-center" id="examName"></p>
+							<div class="d-block align-center">
+								<span class="d-inline p-xs bd-1 line-h-0">
+									<img id="userIcon" alt="" src="content/images/defaultusericon.png" onerror="this.src='content/images/defaultusericon.png'" style="max-width:100px;">
+								</span>
+							</div>
+							<div class="d-block p-sm mt-sm bd-1 radius-sm">
+								<table class="width-all line-h-24">
+									<tbody><tr>
+										<th class="width-80">姓名：</th>
+										<td id="workerName">吴兰芳</td>
+									</tr>
+									<tr>
+										<th class="width-80">性别：</th>
+										<td id="workerSex">女</td>
+									</tr>
+									<tr>
+										<th class="width-80">工作单位：</th>
+										<td id="workerCompany">/广西壮族自治区/广西百色市/广西百色市直属单位/广西百色国家农业科技园区管理委员会/百色市农业科学研究所</td>
+									</tr>
+									<tr>
+										<th class="width-80">考试开始：</th>
+										<td>
+											<div class="d-flex justify-start">
+												<div class="d-block">
+													<div class="exam-timeing blue">
+														<text class="d-block c-white" id="startDate">2022-09-25</text>
+														<text class="d-block c-primary" id="startTime">00:00:00</text>
+													</div>
+												</div>
+												<span class="d-flex-item plr-xs align-center">
+													<img class="img-responsive" alt="" src="content/images/img-exam-timeing-lines.png">
+												</span>
+												<div class="d-block">
+													<div class="exam-timeing red">
+														<text class="d-block c-white" id="endDate">2022-12-31</text>
+														<text class="d-block c-error" id="endTime">23:59:59</text>
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody></table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+		</div>
+		<!-- public-modal -->
+		<div data-box="public-modal-box" class="public-modal justify-center d-none">
+			<div class="alert-content">
+				<div class="d-block p-xl bg-white radius-md">
+					<div class="align-center">
+						<h4>暂停考试？</h4>
+						<br>
+						<h2>你还有<span class="c-error plr-md" id="modalNoAnswer"></span>题未作答</h2>
+						<br>
+						<div class="d-inline">
+							<h4 class="d-flex justify-center p-xs bd-1 radius-sm" style="width:auto;">
+								<i class="glyphicon glyphicon-time"></i>
+								<span class="pl-sm" id="noanswerTime"></span>
+							</h4>
+							<br>
+						</div>
+						<br>
+						<h6 class="plr-xxl">
+							<button data-close="public-modal-box" type="button" id="btnConfirmPause" onclick="location.href='./exam-new.html'" class="btn btn-lg btn-danger btn-block">确定</button>
+						</h6>
+					</div>
+				</div>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<h6 class="align-center">
+					<a data-close="public-modal-box" class="line-h-0" href="javascript:;">
+						<img alt="" src="content/images/icon-public-modal-close-white@32px.png">
+					</a>
+				</h6>
+			</div>
+		</div>
+	
+
+<script type="text/javascript" src="content/js/jquery-3.0.0.js"></script>
+<script type="text/javascript" src="content/js/jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="plugins/bootstrap-3.3.7/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="content/js/action.js"></script>
+<script language="JavaScript" src="js/api.js?v=3"></script>
+<script language="JavaScript" src="js/jquery.cookie.js"></script>
+<script language="JavaScript" src="js/common.js?v=5"></script>
+<script type="text/javascript" src="./js/loadpage.js"></script>
+<script type="text/javascript" src="content/layer/layer.js"></script>
+<script language="JavaScript">
+document.write("<script type='text/javascript' src='./js/exam.js?currentTime=" + new Date().getTime() + "'><\/script>")
+</script><script type="text/javascript" src="./js/exam.js?currentTime=1665555813797"></script>
+<script language="javascript">
+	var ARR_ALL = []; //全部试题
+	var ARR_USER_SUBJECT_CHO = []; //用户已经答题的信息subject_id
+	var USER_SUBJECT_ID_AND_CHO_MAP = {}; //用户已经答题的信息subject_id和用户选项
+	var currentSubjectId = 0; // 当前题id
+	var currIdx = 0; //当前题下标
+	var examInfoId;
+	var action;
+	var examQuestionIdArr = [];
+	// 倒计时总数
+	countDownSecond = 10800;
+	// 间隔时间
+	interval = 1000;
+	// 定时器
+	timer = null;
+	// 开始时间
+	startTime = null;
+	// 倒计时执行次数
+	executeCount = 0;
+
+	/*显示考试题信息*/
+	var itms = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j'];
+	var storeExamInfo = {
+		questionDetailArr: [],
+		param: {
+			examId: 0,
+			examPaperId: 0,
+			submitId: 0,
+			userIsFinish: 0,
+			currentSubjectId: 0,
+			singles: "",
+			multis: "",
+			bools: "",
+			surplusSecond: 0,
+			singleMap: {},
+			multiMap: {},
+			boolMap: {}
+		}
+	};
+	$(document).ready(function() {
+		var reqParam = getHtmlParams(location.search);
+		examInfoId = reqParam["id"];
+		storeExamInfo.param.examId = examInfoId;
+		action = reqParam["action"];
+		if (action == "start") {
+			//记录日志信息
+			recordLog(operationLogParam.source.PC,operationLogParam.operation.Exam, "开始考试， ID: " + examInfoId );
+			var storeExamInfoStr = localStorage.getItem("exam_info_" + $.cookie("cookie_a_userId") + "_" + examInfoId);
+			if (storeExamInfoStr != null) {
+				storeExamInfo = JSON.parse(storeExamInfoStr);
+				ARR_ALL = storeExamInfo.questionDetailArr;
+				console.log("start exam ARR_ALL.length=" + ARR_ALL.length);
+				// if(ARR_ALL.length != 50){
+				// 	// location.href = './exam-new.html';
+				// 	alert("當前瀏覽器環境導致運行異常，請聯繫管理員。");
+				// 	return;
+			   	// }
+				setSelectedQuestionInfo(storeExamInfo);
+				currentSubjectId = storeExamInfo.param.currentSubjectId;
+				countDownSecond = storeExamInfo.param.surplusSecond;
+				for (var i = 0; i < ARR_ALL.length; i++) {
+					if (ARR_ALL[i].subjectId == currentSubjectId) {
+						currIdx = i;
+					}
+				}
+				displaySubjectInfo();
+			} else {
+				layer.load(1, {
+					 time: 5000, 
+					shade: [0.5, '#3F3F3F']
+				});
+				// 获取考试信息详情
+				var startExamParam = getExamInfoDetail(examInfoId);
+				
+				if (startExamParam != null) {
+					putExamQuestionIdArr(startExamParam.singles, 1);
+					putExamQuestionIdArr(startExamParam.multiples, 2);
+					putExamQuestionIdArr(startExamParam.booleans, 3);
+					var count = startExamParam.singles.length + startExamParam.multiples.length + startExamParam.booleans.length;
+					console.log("start exam count=" + count);
+					// if(count != 50){
+					// 	location.href = './exam-new.html';
+					// 	alert("當前瀏覽器環境導致運行異常，請聯繫管理員。");
+					// 	return;
+					// }
+					if ( examQuestionIdArr.length != count ) {
+						location.href = './exam-new.html';
+						alert("开始考试，當前瀏覽器環境導致運行異常，請聯繫管理員。");
+						return;
+					}
+
+					var singlesStr = startExamParam.singles.join(",");
+					var multiplesStr = startExamParam.multiples.join(",");
+					var booleansStr = startExamParam.booleans.join(",");
+					var param = {
+						examId: examInfoId,
+						singles: singlesStr,
+						multiples: multiplesStr,
+						booleans: booleansStr
+					};
+					/*发送开始开始信息接口*/
+					callRemoteMethod(api.startExamByIdUrl, param, callBackStartExam);
+				} else {
+					location.href = './exam-new.html';
+					alert("您好，當前瀏覽器環境導致運行異常，請聯繫管理員。");
+					return;
+				}
+			}
+			startTime = new Date().getTime();
+			if (countDownSecond >= 0) {
+				timer = setTimeout(countDownStart,interval);
+			}
+		} else {
+			syncCallRemoteMethodJson(api.continueExamByIdUrl, {
+				examId: examInfoId
+			}, continueExam);
+			// 设置继续考试的倒计时
+			timer = setTimeout(countDownStart,interval);
+		}
+		setExamDateTime();
+		callRemoteMethod(api.getUserByIdUrl, {}, getUserInfoCallBack); //获取用户基本信息
+		//确认按钮，下一题事件
+		$("#btnConfirm").click(function() {
+			//记录日志信息
+			recordLog(operationLogParam.source.PC,operationLogParam.operation.Exam, "开始考试， ID: " + examInfoId + "  当前题目，ID:" + currentSubjectId);
+			clickNext();
+		});
+		//上一题事件
+		$("#btnPrevious").click(function() {
+			if (currIdx == 0) {
+				return
+			}
+			currIdx--
+			displaySubjectInfo();
+		})
+		$("#btnPause").click(function() {
+			$('[data-box="public-modal-box"]').toggleClass('d-none');
+			$("#modalNoAnswer").html($('.noanswer').length)
+			//$("#noanswerTime").html('请您在' + $("#endDate").html() + ' ' + $("#endTime").html() + '前继续答完！')
+			$("#noanswerTime").html('请您在倒计时结束前完成答题！')
+		})
+		//交卷按钮点击事件
+		$("#btnHandPaper").click(function() {
+			clickNext();
+			if ($('.noanswer').length > 0) {
+				alert("您有" + $('.noanswer').length + "未答，请答完题，再交卷!")
+				return
+			}
+			var storeExamInfoStr = localStorage.getItem("exam_info_" + $.cookie("cookie_a_userId") + "_" + examInfoId);
+			var jsonVal = JSON.parse(storeExamInfoStr);
+			var singles = '',
+				multis = '',
+				bools = '';
+				
+			// 提交进行重新排序
+			let orderArr = jsonVal.order
+			if (orderArr !== undefined) {
+				// 单选题
+				for (let i=0;i<orderArr.length;i++) {
+					let key = orderArr[i]
+					let value = jsonVal.param.singleMap[key]
+					if (value === undefined) continue
+					singles += orderArr[i] + ":" + value + ','
+				}
+				// 多选题
+				for (let i=0;i<orderArr.length;i++) {
+					let key = orderArr[i]
+					let value = jsonVal.param.multiMap[key]
+					if (value === undefined) continue
+					multis += orderArr[i] + ":" + value + ','
+				}
+				// 判断题
+				for (let i=0;i<orderArr.length;i++) {
+					let key = orderArr[i]
+					let value = jsonVal.param.boolMap[key]
+					if (value === undefined) continue
+					bools += orderArr[i] + ":" + value + ','
+				}
+			}else {
+				for (var key in jsonVal.param.singleMap) {
+					singles += key + ':' + jsonVal.param.singleMap[key] + ',';
+				}
+				for (var key in jsonVal.param.multiMap) {
+					multis += key + ':' + jsonVal.param.multiMap[key] + ',';
+				}
+				for (var key in jsonVal.param.boolMap) {
+					bools += key + ':' + jsonVal.param.boolMap[key] + ','
+				}
+			}
+
+			if (singles != '') {
+				singles = singles.substring(0, singles.length - 1)
+			}
+			if (multis != '') {
+				multis = multis.substring(0, multis.length - 1)
+			}
+			if (bools != '') {
+				bools = bools.substring(0, bools.length - 1)
+			}
+			
+			jsonVal.param.singles = singles;
+			jsonVal.param.bools = bools;
+			jsonVal.param.multis = multis;
+			jsonVal.param.userIsFinish = 1;
+			if (confirm('是否交卷!')) {
+				// 提交试卷的时候, 先不删除缓存. 提交成功再删除缓存. 防止提交失败数据丢失
+				// localStorage.removeItem("exam_info_" + $.cookie("cookie_a_userId") + "_" + examInfoId);
+				var param = {
+					'submitId': jsonVal.param.submitId,
+					'examId': examInfoId,
+					'examPaperId': jsonVal.param.examPaperId,
+					'singles': singles,
+					'booleans': bools,
+					'multiples': multis
+				};
+				callRemoteMethod(api.userSubmitNewExamPaperUrl, param, submitCallBack);
+			}
+		})
+	})
+</script>
+<div class="layui-layer-move"></div></body>
