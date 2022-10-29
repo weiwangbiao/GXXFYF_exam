@@ -1,20 +1,21 @@
+/**
+插入页面的控件
 $("h4:first").after('  答题数：<input type="text" id="timus" style="width:34px;" value="100"> \
 间隔：<input type="text" id="sleep_time" style="width:26px;" value="10"> \
 +随机<input type="text" id="rnd_time" style="width:26px;"  value="15">秒。 \
 <input type="button" value="答题！" id="answerme"/>  ')
+var sleep_time = parseInt($("#sleep_time").val());
+var rnd_time = parseInt($("#rnd_time").val());
+**/
 function doit(){
-    var input_time = parseInt($("#sleep_time").val()*1000);
-    var rndtime = Math.random()*parseInt($("#rnd_time").val())*1000;
+    var input_time = sleep_time*1000;
+    var rndtime = Math.random()*rnd_time*1000;
     sltime = input_time+rndtime
-    // $("#answerme").attr("disabled","disabled");
-	// console.log(input_time);
-    // console.log(rndtime);
-    // console.log(sltime);
-    
     if(now_id < parseInt($("#timus").val())+1) {
+		//获取当前题目的Id，拼接成获取答案的请求网址，用的是GitHub的库，避免重复请求考试服务器引发怀疑
 		var nowSubjectId = $("#nowSubjectId").val();
 		//if (nowSubjectId == null ){nowSubjectId = '15236'}
-		var url = "https://raw.githubusercontent.com/weiwangbiao/GXXFYF_exam/master/tiku/"+nowSubjectId+".json";
+		var url = "https://ghproxy.com/https://raw.githubusercontent.com/weiwangbiao/GXXFYF_exam/master/tiku/"+nowSubjectId+".json";
 		var request = new XMLHttpRequest();
 		request.open("get",url);
 		request.send(null);
@@ -42,14 +43,13 @@ function doit(){
 					}
 				if ($("#btnNext").length > 0){
 					$("#btnNext").click();
-					console.log('next');
 					}
 				setTimeout("doit()", sltime);
 				now_id++;
 
 
 			}else{
-				console.log('use data-type=0');
+				//console.log('use data-type=0');
 				$("li[data-type='0']").click();
 				console.log(new Date().toLocaleTimeString()+': 已经答完第'+ now_id+' 题，等待'+parseInt(sltime)/1000+' 秒答下一题...');		
 				if ($("#btnConfirm").length > 0){
