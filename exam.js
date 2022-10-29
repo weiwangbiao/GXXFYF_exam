@@ -6,12 +6,13 @@ $("h4:first").after('  答题数：<input type="text" id="timus" style="width:34
 <input type="button" value="答题！" id="answerme"/>  ')
 var sleep_time = parseInt($("#sleep_time").val());
 var rnd_time = parseInt($("#rnd_time").val());
+var timus = parseInt($("#timus").val());
 **/
 function doit(){
     var input_time = sleep_time*1000;
     var rndtime = Math.random()*rnd_time*1000;
     sltime = input_time+rndtime
-    if(now_id < parseInt($("#timus").val())+1) {
+    if(now_id < timus+1) {
 		//获取当前题目的Id，拼接成获取答案的请求网址，用的是GitHub的库，避免重复请求考试服务器引发怀疑
 		var nowSubjectId = $("#nowSubjectId").val();
 		//if (nowSubjectId == null ){nowSubjectId = '15236'}
@@ -71,8 +72,13 @@ function doit(){
 	
 		
 }
+/**
 var now_id = 1;
+doit();
+
+
 $("#answerme").click(()=>{
 	now_id = 1;
     doit();  
 })
+**/
