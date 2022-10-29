@@ -1,4 +1,4 @@
-插入页面的控件
+//插入页面的控件
 $("h4:first").after('  答题数：<input type="text" id="timus" style="width:34px;" value="100"> \
 间隔：<input type="text" id="sleep_time" style="width:26px;" value="10"> \
 +随机<input type="text" id="rnd_time" style="width:26px;"  value="15">秒。 \
