@@ -1,4 +1,3 @@
-/**
 插入页面的控件
 $("h4:first").after('  答题数：<input type="text" id="timus" style="width:34px;" value="100"> \
 间隔：<input type="text" id="sleep_time" style="width:26px;" value="10"> \
@@ -7,7 +6,7 @@ $("h4:first").after('  答题数：<input type="text" id="timus" style="width:34
 var sleep_time = parseInt($("#sleep_time").val());
 var rnd_time = parseInt($("#rnd_time").val());
 var timus = parseInt($("#timus").val());
-**/
+
 function doit(){
     var input_time = sleep_time*1000;
     var rndtime = Math.random()*rnd_time*1000;
@@ -72,13 +71,12 @@ function doit(){
 	
 		
 }
-/**
-var now_id = 1;
-doit();
+
+
 
 
 $("#answerme").click(()=>{
-	now_id = 1;
-    doit();  
+	var now_id = 1;
+	doit();  
 })
-**/
+
