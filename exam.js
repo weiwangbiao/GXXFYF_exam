@@ -74,9 +74,9 @@ function doit(){
 
 
 
-
+var now_id = 1;
 $("#answerme").click(()=>{
-	var now_id = 1;
+
 	doit();  
 })
 
