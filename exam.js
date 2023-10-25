@@ -12,7 +12,7 @@ function doit() {
 	if (!now_id) { now_id = 1 + parseInt($("#totalCount").text()); }
 	var input_time = parseInt($("#sleep_time").val() * 1000);
 	var rndtime = Math.random() * parseInt($("#rnd_time").val()) * 1000;
-	var sltime = input_time + rndtime || 20;
+	var sltime = input_time + rndtime || Math.random() * 15 * 1000;
 	// $("#answerme").attr("disabled","disabled");
 
 	if ($(".noanswer").length > 0 || $("#btnNext").length > 0) {
