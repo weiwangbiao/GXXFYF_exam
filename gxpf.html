@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta>
-    <title>¹ãÎ÷ÆÖ·¢ËÑÌâ</title>
+    <title>å¹¿è¥¿æµ¦å‘æœé¢˜</title>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 </head>
 <body>
@@ -31,8 +31,8 @@
 </style>
 <div>
     <form name="form">
-        <span>ÊäÈëÌâÄ¿±àºÅ£º</span><input id="subjectId" class="textbox" type="text"/>
-        <input class="button" type="button" value="»ñÈ¡´ğ°¸" onclick="showdaan()"/>
+        <span>è¾“å…¥é¢˜ç›®ç¼–å·ï¼š</span><input id="subjectId" class="textbox" type="text"/>
+        <input class="button" type="button" value="è·å–ç­”æ¡ˆ" onclick="showdaan()"/>
     </form>
 </div>
 <div id="div0"><h2></h2></div>
@@ -40,7 +40,7 @@
 <script type="text/javascript">
 	function showdaan()
  {
- 	var url = "http://138.3.220.47:8888/daan";
+ 	var url = "http://w3.hima.eu.org:8888//daan";
     $.ajax
     ({
     	url: url,
@@ -50,10 +50,10 @@
 			    key_w: $("#subjectId").val(),
 			  },
 	    success:function(res){
-				$("#div0").append("ÌâÄ¿£º"+res.subjectItems+"</br>");
+				$("#div0").append("é¢˜ç›®ï¼š"+res.subjectItems+"</br>");
 				/***
 				var answer_id =  res.id.split('_');
-				var daan = "´ğ°¸£º</br>";
+				var daan = "ç­”æ¡ˆï¼š</br>";
 				for (i=0; i<answer_id.length; i++){
 					daan += i+1+". "+ res.items[res.itemIds.indexOf(answer_id[i])]+ "</br>";
 					}
@@ -61,7 +61,7 @@
 				***/
 		},
 	    error:function(){
-	    	alert('ÕÒ²»µ½ÌâÄ¿£¬Äã¾ÍÂÒÌî°É¡£');
+	    	alert('æ‰¾ä¸åˆ°é¢˜ç›®ï¼Œä½ å°±ä¹±å¡«å§ã€‚');
 	    },
     });
  }
