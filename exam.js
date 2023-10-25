@@ -1,13 +1,18 @@
 $("h4.d-flex-item").after('间隔：<input type="text" id="sleep_time" style="width:26px;" value="10"> \
 +随机<input type="text" id="rnd_time" style="width:26px;"  value="15">秒。 \
 <input type="button" value="答题！" id="answerme"/>  ')
+var now_id = 1;
+//$("#answerme").click(() => {
+//	doit();
+//})
+document.querySelector("#answerme").addEventListener("click", doit)
 function doit() {
 
 	var now_id = parseInt($(".ing").text());
 	if (!now_id) { now_id = 1 + parseInt($("#totalCount").text()); }
 	var input_time = parseInt($("#sleep_time").val() * 1000);
 	var rndtime = Math.random() * parseInt($("#rnd_time").val()) * 1000;
-	sltime = input_time + rndtime
+	var sltime = input_time + rndtime || 20;
 	// $("#answerme").attr("disabled","disabled");
 
 	if ($(".noanswer").length > 0 || $("#btnNext").length > 0) {
@@ -21,9 +26,9 @@ function doit() {
 		request.onload = function () {//true异步,用onreadystatechange会不等结果，导致同一时刻答多道题，false同步，都得不到结果
 			if (request.status == 200) {
 				var json = JSON.parse(request.responseText);
-				answer_id = json.id.split('_');
-				console.log($("#nowSubjectId").val() + ": " + answer_id);
-				for (i = 0; i < answer_id.length; i++) {
+				var answer_id = json.id.split('_');
+				console.log(nowSubjectId + ": " + answer_id);
+				for (var i = 0; i < answer_id.length; i++) {
 					// console.log(answer_id[i]);
 					if (json.itemIds.includes(answer_id[i])) {
 						$("li[itemid='" + answer_id[i] + "']").click();
@@ -43,7 +48,7 @@ function doit() {
 				if ($("#btnNext").length > 0) {
 					$("#btnNext").click();
 				}
-				setTimeout("doit()", sltime);
+				setTimeout(doit, sltime);
 				now_id++;
 
 
@@ -59,7 +64,7 @@ function doit() {
 					console.log('next');
 				}
 
-				setTimeout("doit()", sltime);
+				setTimeout(doit, sltime);
 			}
 		}
 	} else {
@@ -69,10 +74,6 @@ function doit() {
 		$("#btnHandPaper").click();
 	}
 }
-var now_id = 1;
-//$("#answerme").click(() => {
-//	doit();
-//})
-document.querySelector("#answerme").addEventListener("click", doit)
+
 
 
