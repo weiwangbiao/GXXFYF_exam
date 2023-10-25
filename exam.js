@@ -70,8 +70,9 @@ function doit() {
 	}
 }
 var now_id = 1;
-$("#answerme").click(() => {
-	doit();
-})
+//$("#answerme").click(() => {
+//	doit();
+//})
+document.querySelector("#answerme").addEventListener("click", doit)
 
 
