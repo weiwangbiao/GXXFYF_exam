@@ -50,7 +50,14 @@
 			    key_w: $("#subjectId").val(),
 			  },
 	    success:function(res){
-				$("#div0").append("题目："+res.subjectItems+"</br>");
+				//$("#div0").append("题目："+res.subjectItems+"</br>");
+				$("#div0").empty();
+				for(var i=0;i<res.subjectItems.length;i++){
+					$("#div0").append("题目："+Object.keys(res.subjectItems[i])[0]+"</br>答案："+Object.values(res.subjectItems[i])[0]+"</br></br>");
+				}
+				if(res.subjectItems.length<1){
+					$("#div0").append("no result.");
+				}
 				/***
 				var answer_id =  res.id.split('_');
 				var daan = "答案：</br>";
