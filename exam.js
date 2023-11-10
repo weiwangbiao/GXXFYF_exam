@@ -24,7 +24,7 @@ function doit() {
 		request.send(null);
 		request.onload = function () {//true异步,用onreadystatechange会不等结果，导致同一时刻答多道题，false同步，都得不到结果
 			if (request.status == 200) { //如果返回正确，说明用的是id查询答案，从结果中抽出答案的id，点击itemid=answer_id的li
-				var json = JSON.parse(request.responseText);
+				var json = JSON.parse(request.responseText.replaceAll("\'","\"").replaceAll("\\"," "));
 				var answer_id = json.id.split('_');
 				console.log(nowSubjectId + ": " + answer_id);
 				for (var i = 0; i < answer_id.length; i++) {
