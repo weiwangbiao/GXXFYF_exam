@@ -7,7 +7,7 @@ import pymongo
 
 # print(requests.get("https://raw.githubusercontent.com/weiwangbiao/GXXFYF_exam/master/tiku/1.json").text)
 myclient = pymongo.MongoClient(
-    "mongodb://user:shasiXiaoriben!@158.101.93.192:27017/")
+    "mongodb://********/")
 db = myclient.gxpf
 collection = db.tiku
 dblist = myclient.list_database_names()
