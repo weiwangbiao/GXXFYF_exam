@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta>
+    <title>广西浦发搜题</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<body>
+<style type="text/css">
+  		.button{
+  			width: 100px;
+  			height: 29px;
+  			font-size: 16px;
+  			color: white;
+  			background-color: black;
+  			padding: 0;
+  			vertical-align: top;
+  			border: 0;
+  		}
+  		.textbox{
+  			height: 25px;
+  			padding: 0;
+  			vertical-align: top;
+  		}
+  		span{
+  			font-size: 16px;
+  			height: 29px;
+  			line-height: 29px;
+  		}
+
+</style>
+<div>
+    <form name="form">
+        <span>输入题目编号：</span><input id="subjectId" class="textbox" type="text"/>
+        <input class="button" type="button" value="获取答案" onclick="showdaan()"/>
+    </form>
+</div>
+<div id="div0"><h2></h2></div>
+
+<script type="text/javascript">
+	function showdaan()
+ {
+ 	var url = "http://158.101.93.192:8888/daan";
+    $.ajax
+    ({
+    	url: url,
+		dataType: "json",
+		type: "get",
+		data: { 
+			    key_w: $("#subjectId").val(),
+			  },
+	    success:function(res){
+				//$("#div0").append("题目："+res.subjectItems+"</br>");
+				$("#div0").empty();
+				console.log(res)
+				if(res.msg_code<0){
+					$("#div0").append("no result.");
+				}
+				for(var i=0;i<res.subjectItems.length;i++){
+					$("#div0").append("题目："+Object.values(res.subjectItems[i])[0]+"</br>答案："+Object.values(res.subjectItems[i].idNames)+"</br></br>");
+				}
+
+				/***
+				var answer_id =  res.id.split('_');
+				var daan = "答案：</br>";
+				for (i=0; i<answer_id.length; i++){
+					daan += i+1+". "+ res.items[res.itemIds.indexOf(answer_id[i])]+ "</br>";
+					}
+				$("#div0").append(daan+"</br>");
+				***/
+		},
+	    error:function(){
+	    	alert('找不到题目，你就乱填吧。');
+	    },
+    });
+ }
+
+
+</script>
+
+</body>
+</html>
