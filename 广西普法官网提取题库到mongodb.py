@@ -3,7 +3,7 @@ import pymongo
 
 
 myclient = pymongo.MongoClient(
-    "mongodb://user:shasiXiaoriben!@158.101.93.192:27017/")
+    "mongodb://***:****!@*******:27017/")
 db = myclient.gxpf
 collection = db.tiku
 
