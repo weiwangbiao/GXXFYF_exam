@@ -18,7 +18,8 @@ function doit() {
 		//获取当前题目的Id，拼接成获取答案的请求网址，用的是GitHub的库，避免重复请求考试服务器引发怀疑
 		var nowSubjectId = $("#nowSubjectId").val();
 		//if (nowSubjectId == null ){nowSubjectId = '15236'}
-		var url = "https://raw.githubusercontent.com/weiwangbiao/GXXFYF_exam/master/tiku/" + nowSubjectId + ".json";
+		var url = "https://api.hima.eu.org/gxpfget?subjectId=" + nowSubjectId;
+		//var url = "https://raw.githubusercontent.com/weiwangbiao/GXXFYF_exam/master/tiku/" + nowSubjectId + ".json";
 		var request = new XMLHttpRequest();
 		request.open("get", url, true); //true异步，false同步，等待结果后才继续
 		request.send(null);
